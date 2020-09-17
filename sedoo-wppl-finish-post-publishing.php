@@ -33,9 +33,16 @@ if ( ! function_exists('get_field') ) {
 	/////////////
 	// configuring the CRONtask
 	/////////////
-
+	function myprefix_custom_cron_schedule( $schedules ) {
+		$schedules['every_six_hours'] = array(
+			'interval' => 21600, // Every 6 hours
+			'display'  => __( 'Every 6 hours' ),
+		);
+		return $schedules;
+	}
+	add_filter( 'cron_schedules', 'myprefix_custom_cron_schedule' );
 	if (!wp_next_scheduled('sedoo_finish_publishing')) {
-		wp_schedule_event( time(), 'daily', 'sedoo_finish_publishing' );
+		wp_schedule_event( time(), 'every_six_hours', 'sedoo_finish_publishing' );
 	}
 	add_action ( 'sedoo_finish_publishing', 'sedoo_finish_publishing_func' );
 	
